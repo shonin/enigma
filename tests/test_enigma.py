@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from enigma.enigma import Enigma
+from enigma import Enigma
 
 
 class SingleLetterCipherTestCase(TestCase):
