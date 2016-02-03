@@ -4,8 +4,10 @@ class Enigma(object):
     def __init__(self, reflector=None):
         self.reflector = reflector
 
-    @staticmethod
-    def encrypt(message):
+    def encrypt(self, message):
+        if self.reflector:
+            return self.reflect(message)
+
         translation = {
             '': '',
             'A': 'E',

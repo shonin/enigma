@@ -32,18 +32,46 @@ class SimpleMessageCipherTestCase(TestCase):
         self.assertEqual('EJM', self.enigma.encrypt('ABC'))
 
 
-class RotorUKWBTestCase(TestCase):
+class ReflectorTestCase(TestCase):
     def setUp(self):
-        self.enigma = Enigma(reflector='YRUHQSLDPXNGOKMIEBFZCWVJAT')
+        self.enigma = Enigma(reflector='ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
     def test_enigma_stores_reflector_as_instance_variable(self):
         enigma = Enigma(reflector='foo')
         self.assertEqual('foo', enigma.reflector)
 
-    def test_enigma_reflector_translates_A_as_Y(self):
-        self.assertEqual('Y', self.enigma.reflect('A'))
-
     @patch('enigma.enigma.Enigma.reflect')
     def test_enigma_reflector_used_during_encryption_when_present(self, mock_reflect):
         self.enigma.encrypt('')
         self.assertEqual(1, mock_reflect.call_count)
+
+
+class ReflectorUKWBTestCase(TestCase):
+    def setUp(self):
+        self.enigma = Enigma(reflector='YRUHQSLDPXNGOKMIEBFZCWVJAT')
+
+    def test_enigma_reflects_A_as_Y(self):
+        self.assertEqual('Y', self.enigma.reflect('A'))
+
+    def test_enigma_reflects_AB_as_YR(self):
+        self.assertEqual('YR', self.enigma.reflect('AB'))
+
+    def test_enigma_reflects_ABC_as_YRU(self):
+        self.assertEqual('YRU', self.enigma.reflect('ABC'))
+
+
+class ReflectorUKWATestCase(TestCase):
+    def setUp(self):
+        self.enigma = Enigma(reflector='EJMZALYXVBWFCRQUONTSPIKHGD')
+
+    def test_enigma_reflects_A_as_E(self):
+        self.assertEqual('E', self.enigma.reflect('A'))
+
+    def test_enigma_reflects_AB_as_EJ(self):
+        self.assertEqual('EJ', self.enigma.reflect('AB'))
+
+    def test_enigma_reflects_ABC_as_EJM(self):
+        self.assertEqual('EJM', self.enigma.reflect('ABC'))
+
+    def test_enigma_reflects_alphabet_correctly(self):
+        self.assertEqual('EJMZALYXVBWFCRQUONTSPIKHGD', self.enigma.reflect('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
