@@ -1,12 +1,22 @@
 class Enigma(object):
     ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-    def __init__(self, reflector=None):
+    def __init__(self, reflector=None, rotor=None):
         self.reflector = reflector
+        self.rotor = rotor
 
     def encrypt(self, message):
+        if self.rotor:
+            message = self.rotate(message)
+
         if self.reflector:
-            return self.reflect(message)
+            message = self.reflect(message)
+
+        if self.rotor:
+            message = self.rotate(message, backward=True)
+
+        if self.rotor or self.reflector:
+            return message
 
         translation = {
             '': '',
@@ -28,3 +38,10 @@ class Enigma(object):
     def reflect(self, message):
         reflection = str.maketrans(self.ALPHABET, self.reflector)
         return message.translate(reflection)
+
+    def rotate(self, message, backward=False):
+        if backward:
+            rotation = str.maketrans(self.rotor, self.ALPHABET)
+        else:
+            rotation = str.maketrans(self.ALPHABET, self.rotor)
+        return message.translate(rotation)

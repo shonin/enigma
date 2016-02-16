@@ -32,9 +32,9 @@ class SimpleMessageCipherTestCase(TestCase):
         self.assertEqual('EJM', self.enigma.encrypt('ABC'))
 
 
-class ReflectorTestCase(TestCase):
+class EnigmaTestCase(TestCase):
     def setUp(self):
-        self.enigma = Enigma(reflector='ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        self.enigma = Enigma(reflector='ABCDEFGHIJKLMNOPQRSTUVWXYZ', rotor='ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
     def test_enigma_stores_reflector_as_instance_variable(self):
         enigma = Enigma(reflector='foo')
@@ -44,6 +44,15 @@ class ReflectorTestCase(TestCase):
     def test_enigma_reflector_used_during_encryption_when_present(self, mock_reflect):
         self.enigma.encrypt('')
         self.assertEqual(1, mock_reflect.call_count)
+
+    def test_enigma_stores_rotor_as_instance_variable(self):
+        enigma = Enigma(rotor='foo')
+        self.assertEqual('foo', enigma.rotor)
+
+    @patch('enigma.enigma.Enigma.rotate')
+    def test_enigma_rotor_used_during_encryption_when_present(self, mock_rotate):
+        self.enigma.encrypt('')
+        self.assertEqual(2, mock_rotate.call_count)
 
 
 class ReflectorUKWBTestCase(TestCase):
@@ -75,3 +84,37 @@ class ReflectorUKWATestCase(TestCase):
 
     def test_enigma_reflects_alphabet_correctly(self):
         self.assertEqual('EJMZALYXVBWFCRQUONTSPIKHGD', self.enigma.reflect('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+
+
+class TrivialRotorTestCase(TestCase):
+    def setUp(self):
+        self.enigma = Enigma(reflector='YRUHQSLDPXNGOKMIEBFZCWVJAT', rotor='ACDBEFGHIJKLMNOPQRSTUVWXYZ')
+
+    def test_enigma_encrypts_empty_string_as_empty_string(self):
+        self.assertEqual('', self.enigma.encrypt(''))
+
+    def test_enigma_encrypts_A_as_Y(self):
+        self.assertEqual('Y', self.enigma.encrypt('A'))
+
+    def test_enigma_encrypts_AB_as_YU(self):
+        self.assertEqual('YU', self.enigma.encrypt('AB'))
+
+    def test_enigma_encrypts_ABC_as_YUH(self):
+        self.assertEqual('YUH', self.enigma.encrypt('ABC'))
+
+    def test_enigma_encrypts_ABCD_as_YUHR(self):
+        self.assertEqual('YUHR', self.enigma.encrypt('ABCD'))
+
+
+class TrivialRotorBackwardsTestCase(TestCase):
+    def setUp(self):
+        self.enigma = Enigma(reflector='YRUHQSLDPXNGOKMIEBFZCWVJAT', rotor='ACDBEFGHIJKLMNOPQRSTUVWXYZ')
+
+    def test_enigma_encrypts_empty_string_as_empty_string(self):
+        self.assertEqual('', self.enigma.encrypt(''))
+
+    def test_enigma_encrypts_Y_as_A(self):
+        self.assertEqual('A', self.enigma.encrypt('Y'))
+
+    def test_enigma_encrypts_YR_as_AD(self):
+        self.assertEqual('AD', self.enigma.encrypt('YR'))
