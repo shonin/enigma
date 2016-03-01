@@ -3,7 +3,10 @@ class Enigma(object):
 
     def __init__(self, reflector=None, rotor=None):
         self.reflector = reflector
-        self.rotor = rotor
+
+        if not rotor:
+            rotor = []
+        self.rotor = rotor if type(rotor) is list else [rotor]
 
     def encrypt(self, message):
         if self.rotor:
@@ -40,8 +43,10 @@ class Enigma(object):
         return message.translate(reflection)
 
     def rotate(self, message, backward=False):
-        if backward:
-            rotation = str.maketrans(self.rotor, self.ALPHABET)
-        else:
-            rotation = str.maketrans(self.ALPHABET, self.rotor)
-        return message.translate(rotation)
+        for rotor in self.rotor:
+            if backward:
+                rotation = str.maketrans(rotor, self.ALPHABET)
+            else:
+                rotation = str.maketrans(self.ALPHABET, rotor)
+            message = message.translate(rotation)
+        return message

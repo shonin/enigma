@@ -45,9 +45,9 @@ class EnigmaTestCase(TestCase):
         self.enigma.encrypt('')
         self.assertEqual(1, mock_reflect.call_count)
 
-    def test_enigma_stores_rotor_as_instance_variable(self):
+    def test_enigma_stores_rotor_as_list_instance_variable(self):
         enigma = Enigma(rotor='foo')
-        self.assertEqual('foo', enigma.rotor)
+        self.assertEqual(['foo'], enigma.rotor)
 
     @patch('enigma.enigma.Enigma.rotate')
     def test_enigma_rotor_used_during_encryption_when_present(self, mock_rotate):
@@ -118,3 +118,34 @@ class TrivialRotorBackwardsTestCase(TestCase):
 
     def test_enigma_encrypts_YR_as_AD(self):
         self.assertEqual('AD', self.enigma.encrypt('YR'))
+
+    def test_enigma_encrypts_YRU_as_ADB(self):
+        self.assertEqual('ADB', self.enigma.encrypt('YRU'))
+
+    def test_enigma_encrypts_YRU_as_ADBC(self):
+        self.assertEqual('ADBC', self.enigma.encrypt('YRUH'))
+
+
+class TrivialLeftRotorBothWaysTestCase(TestCase):
+    def setUp(self):
+        self.enigma = Enigma(reflector='YRUHQSLDPXNGOKMIEBFZCWVJAT', rotor='ACDBFZQHIJKLMNOPGRSTUVWXYE')
+
+    def test_enigma_encrypts_G_as_Z(self):
+        self.assertEqual('Z', self.enigma.encrypt('G'))
+
+    def test_enigma_encrypts_alphabet_correctly(self):
+        self.assertEqual('YUHRSTZCPXNQOKMILDEFBWVJAG', self.enigma.encrypt('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+
+
+class TwoRotorsTestCase(TestCase):
+    def setUp(self):
+        self.enigma = Enigma(reflector='YRUHQSLDPXNGOKMIEBFZCWVJAT', rotor=['ACDBEFGHIJKLMNOPQRSTUVWXYZ', 'ACDBEFGHIJKLMNOPQRSTUVWXYZ'])
+
+    def test_enigma_encrypts_A_as_Y(self):
+        self.assertEqual('Y', self.enigma.encrypt('A'))
+
+    def test_enigma_encrypts_AB_as_YH(self):
+        self.assertEqual('YH', self.enigma.encrypt('AB'))
+
+    def test_enigma_encrypts_alphabet_correctly(self):
+        self.assertEqual('YHRUQSLBPXNGOKMIECFZDWVJAT', self.enigma.encrypt('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
