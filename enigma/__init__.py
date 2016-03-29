@@ -1,3 +1,3 @@
-from enigma.enigma import Enigma
+from .enigma import Enigma
 
 __all__ = ['Enigma']
