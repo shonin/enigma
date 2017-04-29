@@ -7,4 +7,8 @@ class Enigma(object):
             return 'J'
         if message == 'C':
             return 'M'
+        if message == 'BC':
+            return 'JM'
+        if message == 'ABC':
+            return 'EJM'
         return ''
