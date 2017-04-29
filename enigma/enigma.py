@@ -9,13 +9,7 @@ class Enigma(object):
         if self.reflector:
             encrypted_string = ''
             for letter in message:
-                if letter == 'A':
-                    encrypted_string += 'Y'
-                if letter == 'B':
-                    encrypted_string += 'R'
-                if letter == 'C':
-                    encrypted_string += 'U'
-
+                encrypted_string += self.reflector[self.get_index(letter)]
             return encrypted_string
 
         encrypted_string = ''
