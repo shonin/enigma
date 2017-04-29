@@ -13,14 +13,12 @@ And an enigma that uses the reflector
 When an operator encrypts "A"
 Then the result is "Y"
 
-@todo
 Scenario: User encrypts message "AB"
 Given a reflector "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 And an enigma that uses the reflector
 When an operator encrypts "AB"
 Then the result is "YR"
 
-@todo
 Scenario: User encrypts message "ABC"
 Given a reflector "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 And an enigma that uses the reflector
