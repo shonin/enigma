@@ -1,6 +1,5 @@
 Feature: Enigma with a reflector and a static rotor should act as a 'forward' 2 transition cypher
 
-@todo
 Scenario: User encrypts no message
 Given a reflector "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 And leftmost rotor "ACDBEFGHIJKLMNOPQRSTUVWXYZ"
